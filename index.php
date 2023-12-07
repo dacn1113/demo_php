@@ -1,17 +1,22 @@
 <?php
-require './Core/Database.php';
-require './Models/BaseModel.php';
-require './Controllers/BaseController.php';
-$controllerName = ucfirst(strtolower(
-    $_REQUEST['controller']
-) ?? '404') . 'Controller';
+session_start();
+require_once 'bootstrap.php';
 
-require "./Controllers/{$controllerName}.php";
+$app = new App();
 
-$actionName = ucfirst(strtolower(
-    $_REQUEST['action']
-));
+// require './Core/Database.php';
+// require './Models/BaseModel.php';
+// require './Controllers/BaseController.php';
+// $controllerName = ucfirst(strtolower(
+//     $_REQUEST['controller']
+// ) ?? '404') . 'Controller';
 
-$controllerObject = new $controllerName;
+// require "./Controllers/{$controllerName}.php";
 
-$controllerObject->$actionName();
+// $actionName = ucfirst(strtolower(
+//     $_REQUEST['action']
+// ));
+
+// $controllerObject = new $controllerName;
+
+// $controllerObject->$actionName();
