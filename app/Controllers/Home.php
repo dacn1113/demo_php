@@ -1,15 +1,15 @@
 <?php
-class Home extends BaseController
+class Home extends Controller
 {
+    protected $model_home;
+
+    public function __construct()
+    {
+        $this->model_home = $this->model('HomeModel');
+    }
     public function index()
     {
-        echo 'Trang chu';
-        // return $this->view('frontend.products.index');
-    }
-
-    public function show($name = '', $age = '')
-    {
-        echo 'Name: ' . $name . '<br>';
-        echo 'Age: ' . $age;
+        $data = $this->model_home->getList();
+        print_r($data);
     }
 }

@@ -1,5 +1,14 @@
 <?php
-
+class ProductModel
+{
+    public function getProduct()
+    {
+        return [
+            'Sản phẩm 1',
+            'Sản phẩm 2'
+        ];
+    }
+}
 // class ProductModel extends BaseModel
 // {
 //     const TABLE = 'products';
