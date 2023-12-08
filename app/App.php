@@ -2,11 +2,14 @@
 
 class App
 {
-    private $__controller, $__action, $__param;
+    private $__controller, $__action, $__param, $__routers;
 
     function __construct()
     {
         global $routers;
+
+        $this->__routers = new Router();
+
         if (!empty($routers['default_controller'])) {
             $this->__controller = $routers['default_controller'];
         }
@@ -16,7 +19,7 @@ class App
 
         $this->handleUrl();
     }
-
+    //Lấy url
     function getUrl()
     {
         if (!empty($_SERVER['PATH_INFO'])) {
@@ -29,9 +32,59 @@ class App
 
     public function handleUrl()
     {
+
         $url  = $this->getUrl();
+
+        //Xử lý chuyển đổi cho router ảo
+        $url = $this->__routers->handleRouter($url);
+
         $urlArr = array_filter(explode('/', $url));
         $urlArr = array_values($urlArr);
+        // echo '<pre>';
+        // print_r($urlArr);
+        // echo '</pre>';
+
+
+        //Kiểm tra khi controller là file thì thực hiên chuyển đổi 
+        $urlCheck = '';
+        if (!empty($urlArr)) {
+
+            foreach ($urlArr as $key => $item) {
+
+                $urlCheck .= $item . '/';
+
+                //Bỏ dấu gạch cuối 
+                $fileCheck = rtrim($urlCheck, '/');
+                $fileArr = explode('/', $fileCheck);
+                // echo '<pre>';
+                // print_r($fileArr);
+                // echo '</pre>';
+                $fileArr[count($fileArr) - 1] = ucfirst($fileArr[count($fileArr) - 1]);
+
+                $fileCheck = implode('/', $fileArr);
+
+                //Xóa tên vị trí [0]
+                if (!empty($urlArr[$key - 1])) {
+                    unset($urlArr[$key - 1]);
+                }
+
+                //Kiểm tra file_abc/file_controller_abc có tồn tại
+                if (file_exists('app/controllers/' . ($fileCheck) . '.php')) {
+                    $urlCheck = $fileCheck;
+                    break;
+                }
+            }
+            $urlArr = array_values($urlArr);
+        }
+
+        // echo '<pre>';
+        // print_r($urlArr);
+        // echo '</pre>';
+
+
+        // echo '<pre>';
+        // print_r($urlArr);
+        // echo '</pre>';
 
         //Xử lý controller
         if (!empty($urlArr[0])) {
@@ -39,9 +92,9 @@ class App
         } else {
             $this->__controller = ucfirst($this->__controller);
         }
-
-        if (file_exists('app/controllers/' . ($this->__controller) . '.php')) {
-            require_once 'controllers/' . ($this->__controller) . '.php';
+        // echo $this->__controller;
+        if (file_exists('app/controllers/' . $urlCheck . '.php')) {
+            require_once 'controllers/' . $urlCheck . '.php';
 
             //Kiểm tra class $this->__controller tồn tại
             if (class_exists($this->__controller)) {
@@ -49,6 +102,7 @@ class App
             } else {
                 $this->loadError();
             }
+
             unset($urlArr[0]);
         } else {
             $this->loadError();
