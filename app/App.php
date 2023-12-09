@@ -6,7 +6,7 @@ class App
 
     function __construct()
     {
-        global $routers;
+        global $routers, $config;
 
         $this->__routers = new Router();
 
@@ -18,6 +18,10 @@ class App
         $this->__param = [];
 
         $this->handleUrl();
+
+        // echo '<pre>';
+        // print_r($config);
+        // echo '</pre>';
     }
     //Lấy url
     function getUrl()
@@ -93,6 +97,13 @@ class App
             $this->__controller = ucfirst($this->__controller);
         }
         // echo $this->__controller;
+        // echo $urlCheck . '<br>';
+
+        //Xử lý khi $urlCheck rỗng
+        if (empty($urlCheck)) {
+            $urlCheck = $this->__controller;
+        }
+
         if (file_exists('app/controllers/' . $urlCheck . '.php')) {
             require_once 'controllers/' . $urlCheck . '.php';
 

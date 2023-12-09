@@ -9,6 +9,10 @@ class Router
 
         $url = trim($url, '/');
 
+        if (empty($url)) {
+            $url = '/';
+        }
+
         // echo '<pre>';
         // print_r($routers);
         // echo '</pre>';

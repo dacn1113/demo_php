@@ -1,24 +1,81 @@
 <?php
+class Database
+{
+    private  $__conn;
 
-// class Database
-// {
-//     const HOST = 'localhost';
+    function __construct()
+    {
+        global $db_config;
+        $this->__conn = Connection::getInstance($db_config);
+    }
+    // function insert($table, $data)
+    // {
+    //     if (!empty($data)) {
+    //         $fieldStr = '';
+    //         $valueStr = '';
+    //         foreach ($data as $key => $value) {
+    //             $fieldStr .= $key . '';
+    //             $valueStr .= "'" . $value . "',";
+    //         }
+    //         $fieldStr = rtrim($fieldStr, ',');
+    //         $valueStr = rtrim($valueStr, ',');
+    //         $sql = "INSERT INTO $table($fieldStr) VALUES ($valueStr)";
 
-//     const USERNAME = 'root';
+    //         $status = $this->query($sql);
+    //         if ($status) {
+    //             return true;
+    //         }
+    //     }
+    //     return false;
+    // }
+    // function update($table, $data, $condition = '')
+    // {
+    //     if (!empty($data)) {
+    //         $updateStr = '';
+    //         foreach ($data as $key => $value) {
+    //             $updateStr .= "$key='$value',";
+    //         }
 
-//     const PASSWORD = '';
+    //         $updateStr = rtrim($updateStr, ',');
 
-//     const DB_NAME = 'demo_php';
+    //         if (!empty($condition)) {
+    //             $sql = "UPDATE $table SET $updateStr WHERE $condition";
+    //         } else {
+    //             $sql = "UPDATE $table SET $updateStr ";
+    //         }
 
-//     public function connect()
-//     {
-//         $connect = mysqli_connect(self::HOST, self::USERNAME, self::PASSWORD, self::DB_NAME);
-//         mysqli_set_charset($connect, "utf8");
+    //         $status = $this->query($sql);
+    //         if ($status) {
+    //             return true;
+    //         }
+    //     }
+    //     return false;
+    // }
 
-//         if (mysqli_connect_errno() === 0) {
-//             return $connect;
-//         }
+    // function delete($table, $data, $condition = '')
+    // {
+    //     if (!empty($condition)) {
+    //         $sql = 'DELETE FROM' . $table . 'WHERE' . $condition;
+    //     } else {
+    //         $sql = 'DELETE FROM' . $table;
+    //     }
+    //     $status = $this->query($sql);
 
-//         return false;
-//     }
-// }
+    //     if ($status) {
+    //         return true;
+    //     }
+    //     return false;
+    // }
+
+    function query($sql)
+    {
+        $statement = $this->__conn->prepare($sql);
+        $statement->execute();
+        return $statement;
+    }
+
+    // function lastInsertId()
+    // {
+    //     return $this->__conn->lastInsertId();
+    // }
+}

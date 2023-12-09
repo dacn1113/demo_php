@@ -2,6 +2,7 @@
 class Home extends Controller
 {
     protected $model_home;
+    public $data;
 
     public function __construct()
     {
@@ -10,7 +11,9 @@ class Home extends Controller
     public function index()
     {
         $data = $this->model_home->getList();
-        echo 'Trang Home' . '<br>';
-        print_r($data);
+        $this->data['sub_content']['menu'] = $data;
+        $this->data['content'] = 'home/index';
+        //Render view
+        $this->render('layout/client_layout', $this->data);
     }
 }
