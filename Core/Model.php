@@ -2,7 +2,7 @@
 //Base Model
 abstract class Model extends Database
 {
-    private $db;
+    protected $db;
 
     function __construct()
     {
@@ -12,7 +12,8 @@ abstract class Model extends Database
     abstract function tableFill();
     abstract function fieldFill();
 
-    protected function get()
+    //Lấy dữ liệu sử dụng câu truy vấn thường
+    protected function all()
     {
         $tableName = $this->tableFill();
         $fieldSelect = $this->fieldFill();
@@ -26,6 +27,24 @@ abstract class Model extends Database
         }
         return false;
     }
+
+    //Lấy 1 bản ghi
+    protected function find()
+    {
+        $tableName = $this->tableFill();
+        $fieldSelect = $this->fieldFill();
+
+        $sql = "SELECT $fieldSelect FROM $tableName";
+
+        $query = $this->db->query($sql);
+
+        if (!empty($query)) {
+            return $query->fetchAll(PDO::FETCH_ASSOC);
+        }
+        return false;
+    }
+
+    //Lấy dữ liệu sử dụng câu truy vấn thường được truyền từ bên ngoài
     protected function getData($sql)
     {
         $result = $this->db->query($sql)->fetchAll(PDO::FETCH_ASSOC);

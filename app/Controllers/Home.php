@@ -11,6 +11,8 @@ class Home extends Controller
     public function index()
     {
         $data = $this->model_home->getList();
+        // $data = $this->model_home->getDataQueryBuilder();
+
         $this->data['sub_content']['menu'] = $data;
         $this->data['content'] = 'home/index';
         //Render view

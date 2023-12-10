@@ -15,14 +15,23 @@ class HomeModel extends Model
 
     public function fieldFill()
     {
-        return 'cate_name';
+        return '*';
     }
+
     public function getList()
     {
-        //Thử lấy data 
-        // $data = $this->getData("SELECT * FROM category");
-        $data = $this->get();
-
+        //Lấy data bằng cách gửi câu truy vấn từ ngoài vào
+        $data = $this->getData("SELECT * FROM category");
+        //Lấy data nhanh từ phương thức đã khai báo 
+        // $data = $this->all();
         return $data;
+    }
+    //Sử dụng QueryBuilder
+    public function getDataQueryBuilder()
+    {
+        $sql = $this->db->table('category')
+            ->where('cate_id', '>', 3)->where('cate_id', '<', 5)
+            ->select('cate_id , cate_name')->get();
+        return $sql;
     }
 }

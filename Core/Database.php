@@ -3,6 +3,7 @@ class Database
 {
     private  $__conn;
 
+    use QueryBuilder;
     //Kết nối Database
     function __construct()
     {
@@ -10,64 +11,64 @@ class Database
         //Chạy kết nối 
         $this->__conn = Connection::getInstance($db_config);
     }
-    // function insert($table, $data)
-    // {
-    //     if (!empty($data)) {
-    //         $fieldStr = '';
-    //         $valueStr = '';
-    //         foreach ($data as $key => $value) {
-    //             $fieldStr .= $key . '';
-    //             $valueStr .= "'" . $value . "',";
-    //         }
-    //         $fieldStr = rtrim($fieldStr, ',');
-    //         $valueStr = rtrim($valueStr, ',');
-    //         $sql = "INSERT INTO $table($fieldStr) VALUES ($valueStr)";
+    function insert($table, $data)
+    {
+        if (!empty($data)) {
+            $fieldStr = '';
+            $valueStr = '';
+            foreach ($data as $key => $value) {
+                $fieldStr .= $key . '';
+                $valueStr .= "'" . $value . "',";
+            }
+            $fieldStr = rtrim($fieldStr, ',');
+            $valueStr = rtrim($valueStr, ',');
+            $sql = "INSERT INTO $table($fieldStr) VALUES ($valueStr)";
 
-    //         $status = $this->query($sql);
-    //         if ($status) {
-    //             return true;
-    //         }
-    //     }
-    //     return false;
-    // }
-    // function update($table, $data, $condition = '')
-    // {
-    //     if (!empty($data)) {
-    //         $updateStr = '';
-    //         foreach ($data as $key => $value) {
-    //             $updateStr .= "$key='$value',";
-    //         }
+            $status = $this->query($sql);
+            if ($status) {
+                return true;
+            }
+        }
+        return false;
+    }
+    function update($table, $data, $condition = '')
+    {
+        if (!empty($data)) {
+            $updateStr = '';
+            foreach ($data as $key => $value) {
+                $updateStr .= "$key='$value',";
+            }
 
-    //         $updateStr = rtrim($updateStr, ',');
+            $updateStr = rtrim($updateStr, ',');
 
-    //         if (!empty($condition)) {
-    //             $sql = "UPDATE $table SET $updateStr WHERE $condition";
-    //         } else {
-    //             $sql = "UPDATE $table SET $updateStr ";
-    //         }
+            if (!empty($condition)) {
+                $sql = "UPDATE $table SET $updateStr WHERE $condition";
+            } else {
+                $sql = "UPDATE $table SET $updateStr ";
+            }
 
-    //         $status = $this->query($sql);
-    //         if ($status) {
-    //             return true;
-    //         }
-    //     }
-    //     return false;
-    // }
+            $status = $this->query($sql);
+            if ($status) {
+                return true;
+            }
+        }
+        return false;
+    }
 
-    // function delete($table, $data, $condition = '')
-    // {
-    //     if (!empty($condition)) {
-    //         $sql = 'DELETE FROM' . $table . 'WHERE' . $condition;
-    //     } else {
-    //         $sql = 'DELETE FROM' . $table;
-    //     }
-    //     $status = $this->query($sql);
+    function delete($table, $data, $condition = '')
+    {
+        if (!empty($condition)) {
+            $sql = 'DELETE FROM' . $table . 'WHERE' . $condition;
+        } else {
+            $sql = 'DELETE FROM' . $table;
+        }
+        $status = $this->query($sql);
 
-    //     if ($status) {
-    //         return true;
-    //     }
-    //     return false;
-    // }
+        if ($status) {
+            return true;
+        }
+        return false;
+    }
 
     function query($sql)
     {
@@ -83,8 +84,8 @@ class Database
         }
     }
 
-    // function lastInsertId()
-    // {
-    //     return $this->__conn->lastInsertId();
-    // }
+    function lastInsertId()
+    {
+        return $this->__conn->lastInsertId();
+    }
 }
