@@ -30,13 +30,14 @@ class Connection
             self::$conn = $con;
         } catch (Exception $exception) {
             $mess = $exception->getMessage();
-            if (preg_match('/Access denfine for user/', $mess)) {
-                die('Lỗi kết nối cơ sở dữ liệu');
-            }
-            if (preg_match('/Unknown database/', $mess)) {
-                die('Không tìm thấy cơ sỡ dữ liệu');
-            }
-            // die($mess);
+            App::$app->loadError('database', ['message' => $mess]);
+            // if (preg_match('/Access denfine for user/', $mess)) {
+            //     die('Lỗi kết nối cơ sở dữ liệu');
+            // }
+            // if (preg_match('/Unknown database/', $mess)) {
+            //     die('Không tìm thấy cơ sỡ dữ liệu');
+            // }
+            die();
         }
     }
     public static function getInstance($config)

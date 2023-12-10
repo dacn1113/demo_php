@@ -4,9 +4,13 @@ class App
 {
     private $__controller, $__action, $__param, $__routers;
 
+    static public $app;
     function __construct()
     {
         global $routers, $config;
+
+        //Hiển thị lỗi
+        self::$app = $this;
 
         $this->__routers = new Router();
 
@@ -135,8 +139,9 @@ class App
             $this->loadError();
         }
     }
-    public function loadError($name = '404')
+    public function loadError($name = '404', $data = [])
     {
+        extract($data);
         require_once 'errors/' . $name . '.php';
     }
 }

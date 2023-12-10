@@ -1,6 +1,6 @@
 <?php
 //Base Model
-class Model extends Database
+abstract class Model extends Database
 {
     private $db;
 
@@ -9,6 +9,23 @@ class Model extends Database
         $this->db = new Database();
     }
 
+    abstract function tableFill();
+    abstract function fieldFill();
+
+    protected function get()
+    {
+        $tableName = $this->tableFill();
+        $fieldSelect = $this->fieldFill();
+
+        $sql = "SELECT $fieldSelect FROM $tableName";
+
+        $query = $this->db->query($sql);
+
+        if (!empty($query)) {
+            return $query->fetchAll(PDO::FETCH_ASSOC);
+        }
+        return false;
+    }
     protected function getData($sql)
     {
         $result = $this->db->query($sql)->fetchAll(PDO::FETCH_ASSOC);

@@ -3,9 +3,11 @@ class Database
 {
     private  $__conn;
 
+    //Kết nối Database
     function __construct()
     {
         global $db_config;
+        //Chạy kết nối 
         $this->__conn = Connection::getInstance($db_config);
     }
     // function insert($table, $data)
@@ -69,9 +71,16 @@ class Database
 
     function query($sql)
     {
-        $statement = $this->__conn->prepare($sql);
-        $statement->execute();
-        return $statement;
+        try {
+            $statement = $this->__conn->prepare($sql);
+            $statement->execute();
+            return $statement;
+        } catch (Exception $e) {
+            $mess = $e->getMessage();
+            $data['message'] = $mess;
+            App::$app->loadError('database', $data);
+            die();
+        }
     }
 
     // function lastInsertId()

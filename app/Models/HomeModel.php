@@ -8,10 +8,20 @@ class HomeModel extends Model
     // {
     //     parent::__construct();
     // }
+    public function tableFill()
+    {
+        return 'category';
+    }
+
+    public function fieldFill()
+    {
+        return 'cate_name';
+    }
     public function getList()
     {
         //Thử lấy data 
-        $data = $this->getData("SELECT * FROM category");
+        // $data = $this->getData("SELECT * FROM category");
+        $data = $this->get();
 
         return $data;
     }
