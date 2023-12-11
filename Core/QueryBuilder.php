@@ -103,6 +103,25 @@ trait QueryBuilder
         return $inserStatus;
     }
 
+    public function update($data)
+    {
+        $whereUpdate = str_replace('WHERE', '', $this->where);
+        $whereUpdate = trim($whereUpdate);
+        $tableName = $this->tableName;
+        $statusUpdate = $this->updateData($tableName, $data, $whereUpdate);
+        return $statusUpdate;
+    }
+
+    public function delete()
+    {
+        $whereDelete = str_replace('WHERE', '', $this->where);
+        $whereDelete = trim($whereDelete);
+        $tableName = $this->tableName;
+
+        $statusDelete = $this->deleteData($tableName, $whereDelete);
+        return $statusDelete;
+    }
+
     public function join($tableName, $relationship)
     {
         $this->innerJoin .= 'INNER JOIN ' . $tableName . ' ON ' . $relationship;
@@ -123,6 +142,10 @@ trait QueryBuilder
             $this->orderBy = "ORDER BY " . $field . " " . $type;
         }
         return $this;
+    }
+    public function lastId()
+    {
+        return  $this->lastInsertId();
     }
 
     public function resetQuery()

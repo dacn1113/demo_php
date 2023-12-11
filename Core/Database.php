@@ -55,12 +55,12 @@ class Database
         return false;
     }
 
-    function delete($table, $data, $condition = '')
+    function deleteData($table, $condition = '')
     {
         if (!empty($condition)) {
-            $sql = 'DELETE FROM' . $table . 'WHERE' . $condition;
+            $sql = 'DELETE FROM ' . $table . ' WHERE ' . $condition;
         } else {
-            $sql = 'DELETE FROM' . $table;
+            $sql = 'DELETE FROM ' . $table;
         }
         $status = $this->query($sql);
 

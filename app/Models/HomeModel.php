@@ -36,7 +36,8 @@ class HomeModel extends Model
     {
         $id = $this->primaryKey();
         $sql = $this->db->table('category')
-            ->where('cate_id', '>', 0)->where('cate_id', '<', 8)
+            // ->where('cate_id', '>', 0)->where('cate_id', '<', 10)
+            ->where('cate_id', '>', 0)
             ->select('cate_id , cate_name')->orderBy($id, 'DESC')->get();
         // $sql = $this->db->table('category as c')->join('category_v2 as c_v2', 'c.cate_id=c_v2.cate_id')->select('name, cate_name')->where('c.cate_id', '=', '1')->get();
 
@@ -46,5 +47,20 @@ class HomeModel extends Model
     {
         $sql = $this->db->table('category')->insert($data);
         return $sql;
+    }
+    public function updateDataQueryBuilder($data, $id)
+    {
+        $sql = $this->db->table('category')->where('cate_id', '=', $id)->update($data);
+        return $sql;
+    }
+    public function deleteDataQueryBuilder($id)
+    {
+        $sql = $this->db->table('category')->where('cate_id', '=', $id)->delete();
+        return $sql;
+    }
+    public function lastInsertIdDataQueryBuilder($data)
+    {
+        $this->db->table('category')->insert($data);
+        return $this->db->lastId();
     }
 }
