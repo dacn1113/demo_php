@@ -2,7 +2,7 @@
 
 class App
 {
-    private $__controller, $__action, $__param, $__routers;
+    private $__controller, $__action, $__param, $__routers, $__db;
 
     static public $app;
     function __construct()
@@ -20,6 +20,13 @@ class App
 
         $this->__action = 'index';
         $this->__param = [];
+
+        //Khai báo để có thể sử dụng được QueryBuilder bên ngoài không thông qua Model
+        if (class_exists('DB')) {
+            $dbObject = new DB();
+            $this->__db = $dbObject->db;
+        }
+
 
         $this->handleUrl();
 
@@ -114,11 +121,17 @@ class App
             //Kiểm tra class $this->__controller tồn tại
             if (class_exists($this->__controller)) {
                 $this->__controller = new $this->__controller();
+
+                if (!empty($this->__db)) {
+                    $this->__controller->db = $this->__db;
+                }
+
+                unset($urlArr[0]);
             } else {
                 $this->loadError();
             }
 
-            unset($urlArr[0]);
+            // unset($urlArr[0]);
         } else {
             $this->loadError();
         }

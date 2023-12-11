@@ -11,7 +11,11 @@ class Home extends Controller
     public function index()
     {
         // $data = $this->model_home->getList();
-        $data = $this->model_home->getDataQueryBuilder();
+
+        //Sử dụng QueryBuilder bên ngoài không thông qua Model
+        $data = $this->db->table('category')->get();
+
+        // $data = $this->model_home->getDataQueryBuilder();
 
         $this->data['sub_content']['menu'] = $data;
         $this->data['content'] = 'home/index';
