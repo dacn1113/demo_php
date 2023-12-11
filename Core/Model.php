@@ -11,6 +11,7 @@ abstract class Model extends Database
 
     abstract function tableFill();
     abstract function fieldFill();
+    abstract function primaryKey();
 
     //Lấy dữ liệu sử dụng câu truy vấn thường
     protected function all()
@@ -29,12 +30,13 @@ abstract class Model extends Database
     }
 
     //Lấy 1 bản ghi
-    protected function find()
+    protected function find($id)
     {
         $tableName = $this->tableFill();
         $fieldSelect = $this->fieldFill();
+        $primaryKey = $this->primaryKey();
 
-        $sql = "SELECT $fieldSelect FROM $tableName";
+        $sql = "SELECT $fieldSelect FROM $tableName WHERE $primaryKey = $id";
 
         $query = $this->db->query($sql);
 

@@ -18,6 +18,11 @@ class HomeModel extends Model
         return '*';
     }
 
+    public function primaryKey()
+    {
+        return 'cate_id';
+    }
+
     public function getList()
     {
         //Lấy data bằng cách gửi câu truy vấn từ ngoài vào

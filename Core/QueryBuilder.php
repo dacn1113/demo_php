@@ -24,6 +24,26 @@ trait QueryBuilder
         return $this;
     }
 
+    public function orWhere($field, $compare, $value)
+    {
+        //Nếu Where tồn tại thì chuyển sang OR
+        if (!empty($this->where)) {
+            $this->operator = ' OR';
+        }
+        $this->where .= "$this->operator $field $compare '$value'";
+
+        return $this;
+    }
+    public function whereLike($field, $value)
+    {
+        //Nếu Where tồn tại thì chuyển sang AND
+        if (!empty($this->where)) {
+            $this->operator = ' AND';
+        }
+        $this->where .= "$this->operator $field $ LIKE '$value'";
+
+        return $this;
+    }
     public function select($field = '*')
     {
         $this->selectField = $field;
@@ -43,6 +63,22 @@ trait QueryBuilder
 
         if (!empty($query)) {
             return $query->fetchAll(PDO::FETCH_ASSOC);
+        }
+        return false;
+    }
+    public function first()
+    {
+        $sqlQuery = "SELECT $this->selectField FROM $this->tableName WHERE $this->where";
+        $query = $this->query($sqlQuery);
+
+        //Đặt lại giá trị sau khi thực hiện xong truy vấn 
+        $this->tableName = '';
+        $this->where = '';
+        $this->operator = '';
+        $this->selectField = '*';
+
+        if (!empty($query)) {
+            return $query->fetch(PDO::FETCH_ASSOC);
         }
         return false;
     }
