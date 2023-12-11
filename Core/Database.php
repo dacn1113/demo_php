@@ -11,7 +11,7 @@ class Database
         //Chạy kết nối 
         $this->__conn = Connection::getInstance($db_config);
     }
-    function insert($table, $data)
+    function insertData($table, $data)
     {
         if (!empty($data)) {
             $fieldStr = '';
@@ -31,7 +31,7 @@ class Database
         }
         return false;
     }
-    function update($table, $data, $condition = '')
+    function updateData($table, $data, $condition = '')
     {
         if (!empty($data)) {
             $updateStr = '';

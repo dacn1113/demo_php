@@ -10,8 +10,19 @@ class Home extends Controller
     }
     public function index()
     {
-        $data = $this->model_home->getList();
-        // $data = $this->model_home->getDataQueryBuilder();
+        // $data = $this->model_home->getList();
+        $data = $this->model_home->getDataQueryBuilder();
+
+        $this->data['sub_content']['menu'] = $data;
+        $this->data['content'] = 'home/index';
+        //Render view
+        $this->render('layout/client_layout', $this->data);
+    }
+    public function insert()
+    {
+        // $data = $this->model_home->getList();
+        $dt = ['cate_name' => 'newdatatest'];
+        $data = $this->model_home->insertDataQueryBuilder($dt);
 
         $this->data['sub_content']['menu'] = $data;
         $this->data['content'] = 'home/index';

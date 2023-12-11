@@ -6,6 +6,9 @@ trait QueryBuilder
     public $where = '';
     public $operator = '';
     public $selectField = '*';
+    public $limit = '';
+    public $orderBy = '';
+    public $innerJoin = '';
 
     public function table($tableName)
     {
@@ -16,7 +19,9 @@ trait QueryBuilder
     public function where($field, $compare, $value)
     {
         //Nếu Where tồn tại thì chuyển sang AND
-        if (!empty($this->where)) {
+        if (empty($this->where)) {
+            $this->operator = ' WHERE';
+        } else {
             $this->operator = ' AND';
         }
         $this->where .= "$this->operator $field $compare '$value'";
@@ -27,7 +32,9 @@ trait QueryBuilder
     public function orWhere($field, $compare, $value)
     {
         //Nếu Where tồn tại thì chuyển sang OR
-        if (!empty($this->where)) {
+        if (empty($this->where)) {
+            $this->operator = ' WHERE';
+        } else {
             $this->operator = ' OR';
         }
         $this->where .= "$this->operator $field $compare '$value'";
@@ -37,7 +44,9 @@ trait QueryBuilder
     public function whereLike($field, $value)
     {
         //Nếu Where tồn tại thì chuyển sang AND
-        if (!empty($this->where)) {
+        if (empty($this->where)) {
+            $this->operator = ' WHERE';
+        } else {
             $this->operator = ' AND';
         }
         $this->where .= "$this->operator $field $ LIKE '$value'";
@@ -52,14 +61,14 @@ trait QueryBuilder
 
     public function get()
     {
-        $sqlQuery = "SELECT $this->selectField FROM $this->tableName WHERE $this->where";
+        $sqlQuery = "SELECT $this->selectField FROM $this->tableName $this->innerJoin $this->where $this->orderBy $this->limit ";
+        // $sqlQuery = trim($sqlQuery);
         $query = $this->query($sqlQuery);
 
+        // echo $sqlQuery;
+
         //Đặt lại giá trị sau khi thực hiện xong truy vấn 
-        $this->tableName = '';
-        $this->where = '';
-        $this->operator = '';
-        $this->selectField = '*';
+        $this->resetQuery();
 
         if (!empty($query)) {
             return $query->fetchAll(PDO::FETCH_ASSOC);
@@ -68,18 +77,61 @@ trait QueryBuilder
     }
     public function first()
     {
-        $sqlQuery = "SELECT $this->selectField FROM $this->tableName WHERE $this->where";
+        $sqlQuery = "SELECT $this->selectField FROM $this->tableName $this->where WHERE $this->limit ";
         $query = $this->query($sqlQuery);
 
         //Đặt lại giá trị sau khi thực hiện xong truy vấn 
-        $this->tableName = '';
-        $this->where = '';
-        $this->operator = '';
-        $this->selectField = '*';
+
+        $this->resetQuery();
 
         if (!empty($query)) {
             return $query->fetch(PDO::FETCH_ASSOC);
         }
         return false;
+    }
+    public function limit($number, $offset = 0)
+    {
+        $this->limit = "LIMIT $offset , $number";
+
+        return $this;
+    }
+
+    public function insert($data)
+    {
+        $tableName = $this->tableName;
+        $inserStatus = $this->insertData($tableName, $data);
+        return $inserStatus;
+    }
+
+    public function join($tableName, $relationship)
+    {
+        $this->innerJoin .= 'INNER JOIN ' . $tableName . ' ON ' . $relationship;
+        return $this;
+    }
+
+    /**ORDER BY id DESC
+     * $this->db->orderBy('id','DESC)
+     * $this->db->orderBy('id ASC, name DESC')
+     */
+    public function orderBy($field, $type = 'ASC')
+    {
+        $fieldArr = array_filter(explode(',', $field));
+        if (!empty($fieldArr) && count($fieldArr) >= 2) {
+            //SQL order by 
+            $this->orderBy = "ORDER BY " . implode(',', $fieldArr);
+        } else {
+            $this->orderBy = "ORDER BY " . $field . " " . $type;
+        }
+        return $this;
+    }
+
+    public function resetQuery()
+    {
+        $this->tableName = '';
+        $this->where = '';
+        $this->operator = '';
+        $this->selectField = '*';
+        $this->orderBy = '';
+        $this->innerJoin = '';
     }
 }

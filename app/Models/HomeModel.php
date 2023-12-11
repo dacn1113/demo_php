@@ -34,9 +34,17 @@ class HomeModel extends Model
     //Sử dụng QueryBuilder
     public function getDataQueryBuilder()
     {
+        $id = $this->primaryKey();
         $sql = $this->db->table('category')
-            ->where('cate_id', '>', 3)->where('cate_id', '<', 5)
-            ->select('cate_id , cate_name')->get();
+            ->where('cate_id', '>', 0)->where('cate_id', '<', 8)
+            ->select('cate_id , cate_name')->orderBy($id, 'DESC')->get();
+        // $sql = $this->db->table('category as c')->join('category_v2 as c_v2', 'c.cate_id=c_v2.cate_id')->select('name, cate_name')->where('c.cate_id', '=', '1')->get();
+
+        return $sql;
+    }
+    public function insertDataQueryBuilder($data)
+    {
+        $sql = $this->db->table('category')->insert($data);
         return $sql;
     }
 }
